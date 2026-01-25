@@ -1,0 +1,120 @@
+{
+  "name": "webapp",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "=rag-test",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "98ba3a00-ef96-4829-9cf1-6f391de4f6b8",
+      "name": "Webhook",
+      "webhookId": "6dec1b0d-e2ed-4bce-bcfc-42ac7b069ef5"
+    },
+    {
+      "parameters": {
+        "promptType": "={{ $json.data}}\n",
+        "text": "",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "1df2d968-5f50-4e36-8269-38ded7805b4f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "c0fba2d1-26c7-43ea-a7c8-0909f218af72",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "vRxX9Js1X83y0Eih",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n {$json.output}\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        512,
+        0
+      ],
+      "id": "dcea0abb-c1ac-4e07-a5a2-b74c0152f1b6",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "72829301-fab8-4566-867d-263c088a20b8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "40cc442940abcbd297ef5237e1d4ef53b810dd50adb206e722453fbe3b5389bf"
+  },
+  "id": "zyEh9BHGuxDBcibt",
+  "tags": []
+}
